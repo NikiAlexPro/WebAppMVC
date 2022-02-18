@@ -1,0 +1,37 @@
+﻿@model IEnumerable<DetailClient>
+@{
+    ViewData["Title"] = "Clients";
+}
+<h2>Clients</h2>
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Имя</th>
+            <th>Фамилия</th>
+            <th>Отчество</th>
+            <th>Email</th>
+            <th>Телефон</th>
+            <th>Дата Рождения</th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var client in Model)
+            {
+                 <tr>
+                    <td>@client.Client.FirstName</td>
+                    <td>@client.Client.LastName</td>
+                    <td>@client.Client.Patronymic</td>
+                    <td>@client.Email</td>
+                    <td>@client.Phone</td>
+                    <td>@client.BirthDate</td>
+
+                    <td>
+                       
+                    </td>
+                </tr>
+            }
+        
+    </tbody>
+</table>

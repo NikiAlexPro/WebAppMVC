@@ -9,10 +9,29 @@ namespace WebAppMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        //public HomeController(ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //}
+
+        ApplicationContext context;
+        public HomeController(ApplicationContext db)
         {
-            _logger = logger;
+            context = db;
         }
+
+
+        public IActionResult Clients()
+        {
+            var clients = context.DetailClient.Include(c => c.Client).ToList();
+            return View(clients);
+        }
+
+        public IActionResult ShopProducts()
+        {
+            return View();
+        }
+
 
         public IActionResult Index()
         {
