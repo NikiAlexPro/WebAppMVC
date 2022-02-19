@@ -4,6 +4,12 @@
 }
 <h2>Clients</h2>
 
+<button id="btnCreate" class="btn btn-success">Создать</button>
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+
 
 <table class="table table-hover">
     <thead>
@@ -17,21 +23,52 @@
         </tr>
     </thead>
     <tbody>
-            @foreach (var client in Model)
+            @foreach (var detailClient in Model)
             {
                  <tr>
-                    <td>@client.Client.FirstName</td>
-                    <td>@client.Client.LastName</td>
-                    <td>@client.Client.Patronymic</td>
-                    <td>@client.Email</td>
-                    <td>@client.Phone</td>
-                    <td>@client.BirthDate</td>
+                    <td>@detailClient.Client.FirstName</td>
+                    <td>@detailClient.Client.LastName</td>
+                    <td>@detailClient.Client.Patronymic</td>
+                    <td>@detailClient.Email</td>
+                    <td>@detailClient.Phone</td>
+                    <td>@detailClient.BirthDate</td>
 
                     <td>
+                       @Html.ActionLink("Редактировать", "Edit", new {id = @detailClient.id}, new {@class = "clientItem"})
                        
+                       @Html.ActionLink("Удалить", "Delete", new {id = @detailClient.id}, new {@class = "clientItem"})
                     </td>
                 </tr>
             }
         
     </tbody>
 </table>
+
+
+@section scripts
+{
+    <script type="text/javascript">
+ 
+        $('#btnCreate').on('click', function (e) {
+            alert("text");
+             e.preventDefault();
+                $.get("@Url.Action("Create")", function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                    console.log(this.href);
+                });
+        });
+        $(function () {
+            $.ajaxSetup({ cache: false });
+           $(".clientItem").click(function (e) {
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    alert(data);
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                    console.log(this.href);
+                });
+           });
+        })
+    </script>
+}

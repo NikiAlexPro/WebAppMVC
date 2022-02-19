@@ -31,7 +31,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=ShopProducts}/{id?}");
+    pattern: "{controller=Home}/{action=Clients}/{id?}");
 
 //app.MapGet("/", (ApplicationContext db) => db.Client.ToList());
 //app.MapGet("/", async (ApplicationContext db) =>

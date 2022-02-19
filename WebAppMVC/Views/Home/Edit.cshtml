@@ -1,0 +1,60 @@
+﻿@model WebAppMVC.Models.DetailClient
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Редактирование данных клиента</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> 
+    </div>
+    <div class="modal-body">
+        <form method="post" asp-action="edit" asp-controller="Home">
+           
+            <div class="input-group mb-3" hidden>
+                <input type="text" class="form-control" asp-for="Client.id"/>
+            </div>
+
+            <div class="input-group mb-3" hidden>
+                <input type="text" class="form-control" asp-for="id"/>
+            </div>
+
+            <div class="input-group mb-3" hidden>
+                <input type="text" class="form-control" asp-for="Client_id"/>
+            </div>
+
+
+            <label asp-for="Client.FirstName" class="form-label">Имя</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" asp-for="Client.FirstName"/>
+            </div>
+
+            <label asp-for="Client.LastName" class="form-label">Фамилия</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" asp-for="Client.LastName"/>
+            </div>
+
+            <label asp-for="Client.Patronymic" class="form-label">Отчество</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" asp-for="Client.Patronymic"/>
+            </div>
+
+            <label asp-for="BirthDate" class="form-label">Дата Рождения</label>
+            <div class="input-group mb-3">
+                <input type="date" class="form-control" asp-for="BirthDate"/>
+            </div>
+
+            <label asp-for="Email" class="form-label">Почта</label>
+            <div class="input-group mb-3">
+                <input type="email" class="form-control" asp-for="Email"/>
+            </div>
+
+            <label asp-for="Phone" class="form-label">Телефон</label>
+            <div class="input-group mb-3">
+                <input type="number" class="form-control" asp-for="Phone"/>
+            </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Редактировать" class="btn btn-primary"/>
+            </div>
+
+        </form>
+    </div>
+</div>
