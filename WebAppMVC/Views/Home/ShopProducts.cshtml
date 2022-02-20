@@ -1,2 +1,76 @@
-﻿
+﻿@model IEnumerable<ShopProduct>
+@{
+    ViewData["Title"] = "Clients";
+}
 <h2>ShopProducts</h2>
+
+
+<button id="btnCreate" class="btn btn-success">Создать</button>
+
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Дата покупки</th>
+            <th>Сумма чека</th>
+            <th>Фото покупки</th>
+        </tr>
+    </thead>
+    <tbody>
+            @foreach (var order in Model)
+            {
+                 <tr>
+                    <td>@order.BuyDate</td>
+                    <td>@order.CheckAmmount</td>
+                    <td><img class="image" style="width:30%;cursor:zoom-in" src="data:image;base64,@System.Convert.ToBase64String(@order.ScreenImage)" /></td>
+                    <td>
+                       @Html.ActionLink("Удалить", "Delete", new {id = @order.id}, new {@class = "orderItem"})
+                    </td>
+                </tr>
+            }
+        
+    </tbody>
+</table>
+
+
+@section scripts
+{
+    <script type="text/javascript">
+ 
+        $('#btnCreate').on('click', function (e) {
+            
+             e.preventDefault();
+                $.get("@Url.Action("CreateShop")", function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                    console.log(this.href);
+                });
+        });
+        $(function () {
+            $.ajaxSetup({ cache: false });
+           $(".orderItem").click(function (e) {
+                e.preventDefault();
+                $.get(this.href, function (data) {
+                    
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                    console.log(this.href);
+                });
+           });
+        })
+
+        $(".image").on('click', function (e) {
+            alert("Image Show")
+             e.preventDefault();
+                $.get("@Url.Action("Create")", function (data) {
+                    $('#dialogContent').html(data);
+                    $('#modDialog').modal('show');
+                    console.log(this.href);
+                });
+        });
+    </script>
+}

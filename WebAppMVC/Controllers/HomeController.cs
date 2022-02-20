@@ -21,9 +21,6 @@ namespace WebAppMVC.Controllers
         }
 
 
-
-
-
         [HttpGet]
         public IActionResult Create()
         {
@@ -134,8 +131,16 @@ namespace WebAppMVC.Controllers
         [HttpGet]
         public IActionResult ShopProducts()
         {
-            return View();
+            var products = context.ShopProduct.Include(c => c.DetailClient).ToList();
+            return View(products);
         }
+
+        [HttpGet]
+        public IActionResult CreateShop()
+        {
+            return PartialView();
+        }
+
 
 
         public IActionResult Index()

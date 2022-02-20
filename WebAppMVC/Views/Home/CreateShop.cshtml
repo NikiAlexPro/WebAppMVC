@@ -1,0 +1,32 @@
+﻿@model WebAppMVC.Models.ShopProduct
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Добавление Покупки</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> 
+    </div>
+    <div class="modal-body">
+        <form method="post" asp-action="create" asp-controller="Home">
+           
+            <label asp-for="BuyDate" class="form-label">Дата покупки</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" asp-for="BuyDate"/>
+            </div>
+
+            <label asp-for="CheckAmmount" class="form-label">Сумма чека</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" asp-for="CheckAmmount"/>
+            </div>
+
+            <label asp-for="ScreenImage" class="form-label">Фото покупки</label>
+            <div class="input-group mb-3">
+                @*<input type="text" class="form-control" asp-for="Client.Patronymic"/>*@
+            </div>
+           
+            <div class="form-group">
+                <input type="submit" value="Добавить" class="btn btn-primary"/>
+            </div>
+
+        </form>
+    </div>
+</div>
