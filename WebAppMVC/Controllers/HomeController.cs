@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using WebAppMVC.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
 
 namespace WebAppMVC.Controllers
 {
@@ -131,6 +133,7 @@ namespace WebAppMVC.Controllers
         [HttpGet]
         public IActionResult ShopProducts()
         {
+            //Сортировка
             var products = context.ShopProduct.Include(c => c.DetailClient).ToList();
             return View(products);
         }
@@ -138,7 +141,21 @@ namespace WebAppMVC.Controllers
         [HttpGet]
         public IActionResult CreateShop()
         {
-            return PartialView();
+            var detailclients = context.DetailClient.Include(c => c.Client).ToList();
+            DetailClientListViewModel detailClientListViewModel = new DetailClientListViewModel()
+            {
+                DetailClients = new SelectList(detailclients, "id", "Client.FirstName")
+            };
+            //Добавление detailclient с помощью выбора в списке
+            //Добавление изображения
+            
+            return PartialView(detailClientListViewModel);
+        }
+
+        [HttpPost]
+        public IActionResult CreateShop(DetailClientListViewModel detailClientListViewModel)
+        {
+            return RedirectToAction("ShopProduct");
         }
 
 

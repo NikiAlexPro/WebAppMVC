@@ -1,4 +1,4 @@
-﻿@model WebAppMVC.Models.ShopProduct
+﻿@model WebAppMVC.Models.DetailClientListViewModel
 
 <div class="modal-content">
     <div class="modal-header">
@@ -6,19 +6,23 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> 
     </div>
     <div class="modal-body">
-        <form method="post" asp-action="create" asp-controller="Home">
+        <form method="post" asp-action="createShop" asp-controller="Home">
            
-            <label asp-for="BuyDate" class="form-label">Дата покупки</label>
+            <label class="control-label">Покупатель: </label>
+            <select asp-for="shopProduct.DetailClient_id" asp-items="Model.DetailClients" class="form-control"></select>
+
+
+            <label asp-for="shopProduct.BuyDate" class="form-label">Дата покупки</label>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" asp-for="BuyDate"/>
+                <input type="text" class="form-control" asp-for="shopProduct.BuyDate"/>
             </div>
 
-            <label asp-for="CheckAmmount" class="form-label">Сумма чека</label>
+            <label asp-for="shopProduct.CheckAmmount" class="form-label">Сумма чека</label>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" asp-for="CheckAmmount"/>
+                <input type="text" class="form-control" asp-for="shopProduct.CheckAmmount"/>
             </div>
 
-            <label asp-for="ScreenImage" class="form-label">Фото покупки</label>
+            <label asp-for="shopProduct.ScreenImage" class="form-label">Фото покупки</label>
             <div class="input-group mb-3">
                 @*<input type="text" class="form-control" asp-for="Client.Patronymic"/>*@
             </div>
