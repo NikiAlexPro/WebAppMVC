@@ -59,20 +59,70 @@ namespace WebAppMVC.Controllers
         [HttpGet]
         public IActionResult Edit(Guid id)
         {
-            IQueryable<DetailClient> detailClients = context.DetailClient.Include(c => c.Client);
+            IQueryable<DetailClient> detailClients = context.DetailClient.Include(c => c.Client).AsNoTracking();
             DetailClient dc = detailClients.FirstOrDefault(c => c.id == id);
-            //Если в процессе меняется Client(имя, фамилия, отчество), то нужно создать новый client 
-            //и привязать к нему текущий detailClient(поменять Client_id).
-            //Иначе - просто сохранить изменения в detailClient
-            return PartialView(dc);
+            if (dc != null)
+                return PartialView(dc);
+            else
+                return NotFound(dc);
         }
 
         [HttpPost]
-        public IActionResult Edit(DetailClient detailClient)
+        public async Task<IActionResult> Edit(DetailClient detailClient)
         {
+            IQueryable<DetailClient> ListdC = context.DetailClient.Include(c => c.Client).AsNoTracking();
+            DetailClient sourcedc = ListdC.FirstOrDefault(c => c.id == detailClient.id);
+            if(sourcedc.Client.Compare(detailClient.Client))
+            {
+                //context.Client.Update(detailClient.Client);
+                context.DetailClient.Update(detailClient);
+                await context.SaveChangesAsync();
+            }
+            else
+            {
+                detailClient.Client.id = Guid.NewGuid();
+                Client newClient = detailClient.Client;
+                detailClient.Client = newClient;
+                await context.Client.AddAsync(newClient);
+                context.DetailClient.Update(detailClient);
+                await context.SaveChangesAsync();
+            }
+            //Если в процессе меняется Client(имя, фамилия, отчество), то нужно создать новый client 
+            //и привязать к нему текущий detailClient(поменять Client_id).
+            //Иначе - просто сохранить изменения в detailClient
+
             //if(ModelState.IsValid)
             return RedirectToAction("Clients");
         }
+
+
+        [HttpGet]
+        [ActionName("Delete")]
+        public async Task<IActionResult> ConfirmDelete(Guid id)
+        {
+            IQueryable<DetailClient> detailClients = context.DetailClient.Include(c => c.Client).AsNoTracking();
+            DetailClient dc = detailClients.FirstOrDefault(c => c.id == id);
+            if (dc != null)
+                return PartialView(dc);
+            else
+                return NotFound(dc);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            DetailClient detailClient = context.DetailClient.FirstOrDefault(c => c.id == id);
+            if (detailClient != null)
+            {
+                context.DetailClient.Remove(detailClient);
+                await context.SaveChangesAsync();
+                return RedirectToAction("Clients");
+            }
+            else
+                return NotFound(detailClient);
+            
+        }
+
 
         [HttpGet]
         public IActionResult Clients()

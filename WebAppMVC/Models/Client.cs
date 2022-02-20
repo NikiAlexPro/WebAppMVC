@@ -8,5 +8,14 @@
         public string Patronymic { get; set; }
         public List<DetailClient> DetailClients { get; set; } = new List<DetailClient>();
         
+        public bool Compare(Client client)
+        {
+            if (FirstName == client.FirstName &&
+                LastName == client.LastName &&
+                Patronymic == client.Patronymic)
+                return true;
+            else
+                return false;
+        }
     }
 }

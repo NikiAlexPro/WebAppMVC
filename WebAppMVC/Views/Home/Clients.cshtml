@@ -50,7 +50,7 @@
     <script type="text/javascript">
  
         $('#btnCreate').on('click', function (e) {
-            alert("text");
+            
              e.preventDefault();
                 $.get("@Url.Action("Create")", function (data) {
                     $('#dialogContent').html(data);
@@ -63,7 +63,7 @@
            $(".clientItem").click(function (e) {
                 e.preventDefault();
                 $.get(this.href, function (data) {
-                    alert(data);
+                    
                     $('#dialogContent').html(data);
                     $('#modDialog').modal('show');
                     console.log(this.href);
