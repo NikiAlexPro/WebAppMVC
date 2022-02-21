@@ -6,5 +6,6 @@ namespace WebAppMVC.Models
     {
         public ShopProduct shopProduct { get; set; }
         public SelectList DetailClients { get; set;}
+        public IFormFile? FormFile { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using WebAppMVC.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Drawing;
 
 
 namespace WebAppMVC.Controllers
@@ -145,7 +146,12 @@ namespace WebAppMVC.Controllers
             var a = detailclients.Select(o => new SelectListItem
             {
                 Value = o.id.ToString(),
-                Text = o.Client.FirstName + " " + o.Client.LastName + o.Client.Patronymic + o.Phone + o.Email + o.BirthDate.ToString()
+                Text = o.Client.FirstName + " " 
+                + o.Client.LastName + " " 
+                + o.Client.Patronymic + " " 
+                + o.Phone + " " 
+                + o.Email + " " 
+                + o.BirthDate.ToString()
             }); ;
             DetailClientListViewModel detailClientListViewModel = new DetailClientListViewModel()
             {
@@ -159,16 +165,33 @@ namespace WebAppMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateShop(DetailClientListViewModel detailClientListViewModel)
+        public async Task<IActionResult> CreateShop(DetailClientListViewModel detailClientListViewModel)
         {
-            var a = detailClientListViewModel.shopProduct.DetailClient_id;
-            //var detailclients = context.DetailClient.FirstOrDefaultAsync();
+            var select_id = detailClientListViewModel.shopProduct.DetailClient_id;
+            DetailClient? detailclient = await context.DetailClient.FirstOrDefaultAsync(dc => dc.id == select_id);
+            if (detailclient != null)
+            {
+                detailClientListViewModel.shopProduct.id = Guid.NewGuid();
+                detailClientListViewModel.shopProduct.DetailClient = detailclient;
+                detailClientListViewModel.shopProduct.ScreenImage = ImageConverterToByte.ConvertToByte(detailClientListViewModel.FormFile);
+                detailClientListViewModel.shopProduct.ImageFormat = ImageConverterToByte.ContentType(detailClientListViewModel.FormFile);
+                await context.ShopProduct.AddAsync(detailClientListViewModel.shopProduct);
+                await context.SaveChangesAsync();
+                return RedirectToAction("ShopProduct");
+            }
+            else
+                return NotFound(detailclient);
+            
             //Найти detailClient по id
             //Обновить detailClient и добавить ShopProduct
-            return RedirectToAction("ShopProducts");
+            
         }
 
-
+        public IActionResult ImageShow()
+        {
+            //var imageFromDB = context.ShopProduct.FirstOrDefault(x => x.id == id);
+            return PartialView();
+        }
 
         public IActionResult Index()
         {

@@ -8,9 +8,13 @@
 <button id="btnCreate" class="btn btn-success">Создать</button>
 
 <div id="modDialog" class="modal fade">
-    <div id="dialogContent" class="modal-dialog"></div>
+    <div id="dialogContent" class="modal-dialog modal-lg"></div>
 </div>
 
+<div id="modDialogNew" class="modal fade">
+    <div id="dialogContent" class="modal-dialog modal-lg"></div>
+    <img class="imagepreview" src="">
+</div>
 
 <table class="table table-hover">
     <thead>
@@ -26,7 +30,7 @@
                  <tr>
                     <td>@order.BuyDate</td>
                     <td>@order.CheckAmmount</td>
-                    <td><img class="image" style="width:30%;cursor:zoom-in" src="data:image;base64,@System.Convert.ToBase64String(@order.ScreenImage)" /></td>
+                    <td><img class="image" style="width:30%;cursor:zoom-in" src="data:@(order.ImageFormat);base64,@System.Convert.ToBase64String(@order.ScreenImage)"/></td>
                     <td>
                        @Html.ActionLink("Удалить", "Delete", new {id = @order.id}, new {@class = "orderItem"})
                     </td>
@@ -63,12 +67,24 @@
            });
         })
 
+        //$(function() {
+        //    $('.image').on('click', function() {
+        //        alert("Image Show")
+        //         var a = $('.image').attr('src');
+        //         console.log(a);
+        //         $('.imagepreview').attr('src', $('.image').attr('src'));
+        //         $('#modDialog').modal('show');   
+        //         });     
+        //      });
+
         $(".image").on('click', function (e) {
             alert("Image Show")
              e.preventDefault();
-                $.get("@Url.Action("Create")", function (data) {
+             var a = $('.image').attr('src');
+                $.get("@Url.Action("ImageShow")", function (data) {
                     $('#dialogContent').html(data);
-                    $('#modDialog').modal('show');
+                    $('.imagepreview').attr('src', $('.image').attr('src'));
+                    $('#modDialogNew').modal('show');
                     console.log(this.href);
                 });
         });
