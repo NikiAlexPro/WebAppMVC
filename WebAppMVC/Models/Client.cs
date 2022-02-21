@@ -7,7 +7,6 @@
         public string LastName { get; set; }
         public string Patronymic { get; set; }
         public List<DetailClient> DetailClients { get; set; } = new List<DetailClient>();
-        
         public bool Compare(Client client)
         {
             if (FirstName == client.FirstName &&

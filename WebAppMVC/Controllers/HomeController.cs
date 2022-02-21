@@ -142,9 +142,15 @@ namespace WebAppMVC.Controllers
         public IActionResult CreateShop()
         {
             var detailclients = context.DetailClient.Include(c => c.Client).ToList();
+            var a = detailclients.Select(o => new SelectListItem
+            {
+                Value = o.id.ToString(),
+                Text = o.Client.FirstName + " " + o.Client.LastName + o.Client.Patronymic + o.Phone + o.Email + o.BirthDate.ToString()
+            }); ;
             DetailClientListViewModel detailClientListViewModel = new DetailClientListViewModel()
             {
-                DetailClients = new SelectList(detailclients, "id", "Client.FirstName")
+                //DetailClients = new SelectList(detailclients, "id", "Client.FirstName")
+                DetailClients = new SelectList(a, "Value", "Text")
             };
             //Добавление detailclient с помощью выбора в списке
             //Добавление изображения
@@ -155,7 +161,11 @@ namespace WebAppMVC.Controllers
         [HttpPost]
         public IActionResult CreateShop(DetailClientListViewModel detailClientListViewModel)
         {
-            return RedirectToAction("ShopProduct");
+            var a = detailClientListViewModel.shopProduct.DetailClient_id;
+            //var detailclients = context.DetailClient.FirstOrDefaultAsync();
+            //Найти detailClient по id
+            //Обновить detailClient и добавить ShopProduct
+            return RedirectToAction("ShopProducts");
         }
 
 

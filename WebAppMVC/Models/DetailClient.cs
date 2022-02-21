@@ -12,5 +12,6 @@ namespace WebAppMVC.Models
         [ForeignKey("Client_id")]
         public Client Client { get; set; }
         public List<ShopProduct> Product { get; set; } = new List<ShopProduct>();
+        
     }
 }
