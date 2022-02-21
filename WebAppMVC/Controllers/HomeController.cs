@@ -177,7 +177,7 @@ namespace WebAppMVC.Controllers
                 detailClientListViewModel.shopProduct.ImageFormat = ImageConverterToByte.ContentType(detailClientListViewModel.FormFile);
                 await context.ShopProduct.AddAsync(detailClientListViewModel.shopProduct);
                 await context.SaveChangesAsync();
-                return RedirectToAction("ShopProduct");
+                return RedirectToAction("ShopProducts");
             }
             else
                 return NotFound(detailclient);
@@ -187,10 +187,11 @@ namespace WebAppMVC.Controllers
             
         }
 
-        public IActionResult ImageShow()
+        [HttpGet]
+        public IActionResult ImageShow(Guid id)
         {
-            //var imageFromDB = context.ShopProduct.FirstOrDefault(x => x.id == id);
-            return PartialView();
+            var imageFromDB = context.ShopProduct.FirstOrDefault(x => x.id == id);
+            return PartialView(imageFromDB);
         }
 
         public IActionResult Index()
