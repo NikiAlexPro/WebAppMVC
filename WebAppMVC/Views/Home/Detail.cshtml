@@ -1,0 +1,42 @@
+﻿@model WebAppMVC.Models.ShopProduct
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Детальные данные заказа</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button> 
+    </div>
+    <div class="modal-body">
+        <form method="get" asp-action="detail" asp-controller="Home">
+           
+            <label asp-for="DetailClient.Client.FirstName" class="form-label">Имя</label>
+            <div class="input-group mb-3">
+                <input type="text" readonly class="form-control-plaintext" asp-for="DetailClient.Client.FirstName"/>
+            </div>
+
+            <label asp-for="DetailClient.Client.LastName" class="form-label">Фамилия</label>
+            <div class="input-group mb-3">
+                <input type="text" readonly class="form-control-plaintext" asp-for="DetailClient.Client.LastName"/>
+            </div>
+
+            <label asp-for="DetailClient.Client.Patronymic" class="form-label">Отчество</label>
+            <div class="input-group mb-3">
+                <input type="text" readonly class="form-control-plaintext" asp-for="DetailClient.Client.Patronymic"/>
+            </div>
+
+            <label asp-for="DetailClient.BirthDate" class="form-label">Дата Рождения</label>
+            <div class="input-group mb-3">
+                <input type="date" readonly class="form-control-plaintext" asp-for="DetailClient.BirthDate"/>
+            </div>
+
+            <label asp-for="DetailClient.Email" class="form-label">Почта</label>
+            <div class="input-group mb-3">
+                <input type="email" readonly class="form-control-plaintext" asp-for="DetailClient.Email"/>
+            </div>
+
+            <label asp-for="DetailClient.Phone" class="form-label">Телефон</label>
+            <div class="input-group mb-3">
+                <input type="number" readonly class="form-control-plaintext" asp-for="DetailClient.Phone"/>
+            </div>
+        </form>
+    </div>
+</div>

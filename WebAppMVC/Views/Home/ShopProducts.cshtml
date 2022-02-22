@@ -37,7 +37,8 @@
                         
                     </td>
                     <td>
-                       @Html.ActionLink("Удалить", "Delete", new {id = @order.id}, new {@class = "orderItem"})
+                       @Html.ActionLink("Детали", "Detail", new {id = @order.id}, new {@class = "orderItem"})
+                       @Html.ActionLink("Удалить", "DeleteShop", new {id = @order.id}, new {@class = "orderItem"})
                     </td>
                 </tr>
             }
@@ -63,7 +64,6 @@
            $(".orderItem").click(function (e) {
                 e.preventDefault();
                 $.get(this.href, function (data) {
-                    
                     $('#dialogContent').html(data);
                     $('#modDialog').modal('show');
                     console.log(this.href);
@@ -76,7 +76,6 @@
            $(".links").click(function (e) {
                 e.preventDefault();
                 $.get(this.href, function (data) {
-                    alert("link");
                     $('#dialogContent').html(data);
                     $('#modDialog').modal('show');
                     console.log(this.href);

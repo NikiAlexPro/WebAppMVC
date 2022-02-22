@@ -194,6 +194,41 @@ namespace WebAppMVC.Controllers
             return PartialView(imageFromDB);
         }
 
+        [HttpGet]
+        public IActionResult Detail(Guid id)
+        {
+            var detailproducts = context.ShopProduct.Include(c => c.DetailClient).ThenInclude(c => c.Client).ToList();
+            ShopProduct shopProduct = detailproducts.FirstOrDefault(x => x.id == id);
+            return PartialView(shopProduct);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteShop(Guid id)
+        {
+            var detailproducts = context.ShopProduct.Include(c => c.DetailClient).ThenInclude(c => c.Client).ToList();
+            ShopProduct shopProduct = detailproducts.FirstOrDefault(x => x.id == id);
+            return PartialView(shopProduct);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteShop(ShopProduct shopProduct)
+        {
+            if (shopProduct != null)
+            {
+                var findingShopProduct = await context.ShopProduct.FirstOrDefaultAsync(x => x.id == shopProduct.id);
+                if (findingShopProduct != null)
+                {
+                    context.ShopProduct.Remove(findingShopProduct);
+                    await context.SaveChangesAsync();
+                }
+                return RedirectToAction("ShopProducts");
+            }
+            else
+                return NotFound();
+            
+        }
+
+
         public IActionResult Index()
         {
             return View();
