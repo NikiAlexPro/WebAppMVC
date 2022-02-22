@@ -132,10 +132,19 @@ namespace WebAppMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult ShopProducts()
+        public IActionResult ShopProducts(SortState sortState = SortState.DateDesc)
         {
+            ViewData["DateSort"] = sortState == SortState.DateAsc ? SortState.DateDesc : SortState.DateAsc;
+            ViewData["AmmountSort"] = sortState == SortState.AmmountAsc ? SortState.AmmountDesc : SortState.AmmountAsc;
             //Сортировка
-            var products = context.ShopProduct.Include(c => c.DetailClient).ToList();
+            IEnumerable<ShopProduct> products = context.ShopProduct.Include(c => c.DetailClient).ToList();
+            products = sortState switch
+            {
+                SortState.DateAsc => products.OrderBy(c => c.BuyDate),
+                SortState.DateDesc => products.OrderByDescending(c => c.BuyDate),
+                SortState.AmmountAsc => products.OrderBy(c => c.CheckAmmount),
+                SortState.AmmountDesc => products.OrderByDescending(c => c.CheckAmmount)
+            };
             return View(products);
         }
 
@@ -203,7 +212,8 @@ namespace WebAppMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult DeleteShop(Guid id)
+        [ActionName("DeleteShop")]
+        public IActionResult ConfirmDeleteShop(Guid id)
         {
             var detailproducts = context.ShopProduct.Include(c => c.DetailClient).ThenInclude(c => c.Client).ToList();
             ShopProduct shopProduct = detailproducts.FirstOrDefault(x => x.id == id);
@@ -211,21 +221,17 @@ namespace WebAppMVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> DeleteShop(ShopProduct shopProduct)
+        public async Task<IActionResult> DeleteShop(Guid id)
         {
-            if (shopProduct != null)
+            var findingShopProduct = await context.ShopProduct.FirstOrDefaultAsync(x => x.id == id);
+            if (findingShopProduct != null)
             {
-                var findingShopProduct = await context.ShopProduct.FirstOrDefaultAsync(x => x.id == shopProduct.id);
-                if (findingShopProduct != null)
-                {
-                    context.ShopProduct.Remove(findingShopProduct);
-                    await context.SaveChangesAsync();
-                }
+                context.ShopProduct.Remove(findingShopProduct);
+                await context.SaveChangesAsync();
                 return RedirectToAction("ShopProducts");
             }
             else
-                return NotFound();
-            
+                return NotFound(findingShopProduct);
         }
 
 

@@ -32,7 +32,7 @@
                     <td>@detailClient.Client.Patronymic</td>
                     <td>@detailClient.Email</td>
                     <td>@detailClient.Phone</td>
-                    <td>@detailClient.BirthDate</td>
+                    <td>@detailClient.BirthDate.ToShortDateString()</td>
 
                     <td>
                        @Html.ActionLink("Редактировать", "Edit", new {id = @detailClient.id}, new {@class = "clientItem"})

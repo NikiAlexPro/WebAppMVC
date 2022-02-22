@@ -19,8 +19,12 @@
 <table class="table table-hover">
     <thead>
         <tr>
-            <th>Дата покупки</th>
-            <th>Сумма чека</th>
+            <th>
+                <a asp-action="ShopProducts" asp-route-sortState=@ViewBag.DateSort>Дата покупки</a>
+            </th>
+            <th>
+                <a asp-action="ShopProducts" asp-route-sortState=@ViewBag.AmmountSort>Сумма чека</a>
+            </th>
             <th>Фото покупки</th>
         </tr>
     </thead>
@@ -28,7 +32,7 @@
             @foreach (var order in Model)
             {
                  <tr>
-                    <td>@order.BuyDate</td>
+                    <td>@order.BuyDate.ToShortDateString()</td>
                     <td>@order.CheckAmmount</td>
                     <td>
                        <a href="@Url.Action("ImageShow", "Home", new { id = @order.id }, null)" class="links">
