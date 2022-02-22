@@ -33,7 +33,16 @@ namespace WebAppMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(DetailClient detailClient)
         {
-            //IQueryable<DetailClient> detailClients = context.DetailClient.Include(c => c.Client);
+            //if(ModelState.IsValid)
+            //{
+
+            //}
+            //if (string.IsNullOrEmpty(detailClient.Client.FirstName))
+            //{
+            //    ModelState.AddModelError("Client.FirstName", "Некорректное имя");
+            //    return Ok(); 
+            //}
+            
             Client? client = await context.Client.FirstOrDefaultAsync(client =>
             client.FirstName == detailClient.Client.FirstName &&
             client.LastName == detailClient.Client.LastName &&
@@ -160,7 +169,7 @@ namespace WebAppMVC.Controllers
                 + o.Client.Patronymic + " " 
                 + o.Phone + " " 
                 + o.Email + " " 
-                + o.BirthDate.ToString()
+                + o.BirthDate.ToShortDateString().ToString()
             }); ;
             DetailClientListViewModel detailClientListViewModel = new DetailClientListViewModel()
             {
