@@ -33,36 +33,32 @@ namespace WebAppMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(DetailClient detailClient)
         {
-            //if(ModelState.IsValid)
-            //{
-
-            //}
-            //if (string.IsNullOrEmpty(detailClient.Client.FirstName))
-            //{
-            //    ModelState.AddModelError("Client.FirstName", "Некорректное имя");
-            //    return Ok(); 
-            //}
-            
-            Client? client = await context.Client.FirstOrDefaultAsync(client =>
-            client.FirstName == detailClient.Client.FirstName &&
-            client.LastName == detailClient.Client.LastName &&
-            client.Patronymic == detailClient.Client.Patronymic);
-            if(client != null)
+            if (ModelState.IsValid)
             {
-                detailClient.Client = client;
-                await context.DetailClient.AddAsync(detailClient);
-                await context.SaveChangesAsync();
+                Client? client = await context.Client.FirstOrDefaultAsync(client =>
+                client.FirstName == detailClient.Client.FirstName &&
+                client.LastName == detailClient.Client.LastName &&
+                client.Patronymic == detailClient.Client.Patronymic);
+                if (client != null)
+                {
+                    detailClient.Client = client;
+                    await context.DetailClient.AddAsync(detailClient);
+                    await context.SaveChangesAsync();
+                }
+                else
+                {
+                    detailClient.Client.id = Guid.NewGuid();
+                    client = detailClient.Client;
+                    await context.Client.AddAsync(client);
+                    await context.DetailClient.AddAsync(detailClient);
+                    await context.SaveChangesAsync();
+
+                }
+                return RedirectToAction("Clients");
             }
             else
-            {
-                detailClient.Client.id = Guid.NewGuid();
-                client = detailClient.Client;
-                await context.Client.AddAsync(client);
-                await context.DetailClient.AddAsync(detailClient);
-                await context.SaveChangesAsync();
+                return RedirectToAction("Clients");
 
-            }
-            return RedirectToAction("Clients");
         }
 
         [HttpGet]
@@ -79,29 +75,35 @@ namespace WebAppMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(DetailClient detailClient)
         {
-            IQueryable<DetailClient> ListdC = context.DetailClient.Include(c => c.Client).AsNoTracking();
-            DetailClient sourcedc = ListdC.FirstOrDefault(c => c.id == detailClient.id);
-            if(sourcedc.Client.Compare(detailClient.Client))
+            if (ModelState.IsValid)
             {
-                //context.Client.Update(detailClient.Client);
-                context.DetailClient.Update(detailClient);
-                await context.SaveChangesAsync();
+                IQueryable<DetailClient> ListdC = context.DetailClient.Include(c => c.Client).AsNoTracking();
+                DetailClient sourcedc = ListdC.FirstOrDefault(c => c.id == detailClient.id);
+                if (sourcedc.Client.Compare(detailClient.Client))
+                {
+                    //context.Client.Update(detailClient.Client);
+                    context.DetailClient.Update(detailClient);
+                    await context.SaveChangesAsync();
+                }
+                else
+                {
+                    detailClient.Client.id = Guid.NewGuid();
+                    Client newClient = detailClient.Client;
+                    detailClient.Client = newClient;
+                    await context.Client.AddAsync(newClient);
+                    context.DetailClient.Update(detailClient);
+                    await context.SaveChangesAsync();
+                }
+                //Если в процессе меняется Client(имя, фамилия, отчество), то нужно создать новый client 
+                //и привязать к нему текущий detailClient(поменять Client_id).
+                //Иначе - просто сохранить изменения в detailClient
+
+                //if(ModelState.IsValid)
+                return RedirectToAction("Clients");
             }
             else
-            {
-                detailClient.Client.id = Guid.NewGuid();
-                Client newClient = detailClient.Client;
-                detailClient.Client = newClient;
-                await context.Client.AddAsync(newClient);
-                context.DetailClient.Update(detailClient);
-                await context.SaveChangesAsync();
-            }
-            //Если в процессе меняется Client(имя, фамилия, отчество), то нужно создать новый client 
-            //и привязать к нему текущий detailClient(поменять Client_id).
-            //Иначе - просто сохранить изменения в detailClient
+                return RedirectToAction("Clients");
 
-            //if(ModelState.IsValid)
-            return RedirectToAction("Clients");
         }
 
 
@@ -185,24 +187,20 @@ namespace WebAppMVC.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateShop(DetailClientListViewModel detailClientListViewModel)
         {
-            var select_id = detailClientListViewModel.shopProduct.DetailClient_id;
-            DetailClient? detailclient = await context.DetailClient.FirstOrDefaultAsync(dc => dc.id == select_id);
-            if (detailclient != null)
-            {
-                detailClientListViewModel.shopProduct.id = Guid.NewGuid();
-                detailClientListViewModel.shopProduct.DetailClient = detailclient;
-                detailClientListViewModel.shopProduct.ScreenImage = ImageConverterToByte.ConvertToByte(detailClientListViewModel.FormFile);
-                detailClientListViewModel.shopProduct.ImageFormat = ImageConverterToByte.ContentType(detailClientListViewModel.FormFile);
-                await context.ShopProduct.AddAsync(detailClientListViewModel.shopProduct);
-                await context.SaveChangesAsync();
-                return RedirectToAction("ShopProducts");
-            }
-            else
-                return NotFound(detailclient);
-            
-            //Найти detailClient по id
-            //Обновить detailClient и добавить ShopProduct
-            
+                var select_id = detailClientListViewModel.shopProduct.DetailClient_id;
+                DetailClient? detailclient = await context.DetailClient.FirstOrDefaultAsync(dc => dc.id == select_id);
+                if (detailclient != null)
+                {
+                    detailClientListViewModel.shopProduct.id = Guid.NewGuid();
+                    detailClientListViewModel.shopProduct.DetailClient = detailclient;
+                    detailClientListViewModel.shopProduct.ScreenImage = ImageConverterToByte.ConvertToByte(detailClientListViewModel.FormFile);
+                    detailClientListViewModel.shopProduct.ImageFormat = ImageConverterToByte.ContentType(detailClientListViewModel.FormFile);
+                    await context.ShopProduct.AddAsync(detailClientListViewModel.shopProduct);
+                    await context.SaveChangesAsync();
+                    return RedirectToAction("ShopProducts");
+                }
+                else
+                    return NotFound(detailclient);
         }
 
         [HttpGet]
